@@ -599,7 +599,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
         if (payee.GetVoteCount() >= MNPAYMENTS_SIGNATURES_REQUIRED) {
             for (auto txout : txNew->vout) {
                 if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
-                    LogPrint(BCLog::MNPAYMENTS, "CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
+                    LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
                     return true;
                 }
             }
@@ -619,7 +619,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
             CTxDestination address1;
             ExtractDestination(payee.GetPayee(), address1);
             std::string address2 = EncodeDestination(address1);
-            LogPrint(BCLog::MNPAYMENTS, "address: %s = %d\n",address2,payee.GetVoteCount());
+            LogPrintf("address: %s = %d\n",address2,payee.GetVoteCount());
         }
     }
 

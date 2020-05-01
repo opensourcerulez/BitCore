@@ -584,13 +584,16 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
 
     // if we don't have at least MNPAYMENTS_SIGNATURES_REQUIRED signatures on a payee, approve whichever is the longest chain
     if(sporkManager.IsSporkActive(SPORK_BTX_23_MASTERNODE_PAYMENT_LOW_VOTING))
-        {
-            if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED/3) return true;
-        }
-        else
-        {
-            if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
-        }
+    {
+        if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED/3) return true;
+    }
+    else
+    {
+        if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
+    }
+    
+    LogPrint(BCLog::MNPAYMENTS, "REQUIRED: %d, FOUND MAX: nMaxSignatures\n");
+
 
     for (auto& payee : vecPayees) {
         if (payee.GetVoteCount() >= MNPAYMENTS_SIGNATURES_REQUIRED) {
@@ -610,6 +613,13 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
             } else {
                 strPayeesPossible += "," + address2;
             }
+        }
+        else
+        {
+            CTxDestination address1;
+            ExtractDestination(payee.GetPayee(), address1);
+            std::string address2 = EncodeDestination(address1);
+            LogPrint(BCLog::MNPAYMENTS, "address: %s = %d\n",address2,payee.GetVoteCount());
         }
     }
 
